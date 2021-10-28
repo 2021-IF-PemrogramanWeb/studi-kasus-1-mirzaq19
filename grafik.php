@@ -30,7 +30,7 @@
             justify-content-end
           "
         >
-          <h4>Senin, 25 Oktober 2021</h4>
+        <h4><?= date("l, d/m/Y")?></h4>
         </div>
       </div>
       <div class="mt-5">
