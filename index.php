@@ -19,37 +19,52 @@
         min-height: 100vh;
         display: grid;
         place-items: center;
+        /* background: rgb(51,233,255);
+        background: linear-gradient(90deg, rgba(51,233,255,1) 0%, rgba(226,107,255,1) 100%); */
+        background: rgb(71,255,110);
+        background: linear-gradient(45deg, rgba(71,255,110,1) 0%, rgba(8,143,255,1) 100%);
       }
+      .login-wrapper{
+        width: 100%;
+        max-width: 330px;
+        padding: 1.6rem;
+        border-radius: .8rem;
+      }
+
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-6 text-center bg-light p-5 rounded">
-          <h1 class="mb-3">Login</h1>
+      <div class="d-flex justify-content-center">
+        <div class="login-wrapper bg-light">
+          <h1 class="mb-3 text-center">Login</h1>
+          <p class="text-center"><small>Silahkan login terlebih dahulu</small></p>
+          <hr>
           <form action="./login_action.php" method="post">
             <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">User</label>
+              <label for="inputEmail" class="form-label">Email</label>
               <input
                 type="email"
                 class="form-control"
-                id="exampleInputEmail1"
+                id="inputEmail"
                 name="email"
+                placeholder="example@gmail.com"
               />
             </div>
             <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label"
+              <label for="inputPassword" class="form-label"
                 >Password</label
               >
               <input
                 type="password"
                 class="form-control"
-                id="exampleInputPassword1"
+                id="inputPassword"
                 name="password"
+                placeholder="password"
               />
             </div>
             <div class="mt-4 d-grid">
-              <button type="submit" class="btn btn-block btn-secondary">
+              <button type="submit" class="btn btn-block btn-dark">
                 Login
               </button>
             </div>
