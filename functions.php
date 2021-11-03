@@ -107,3 +107,11 @@ function registrasi($data){
 
 	return mysqli_affected_rows($conn);
 }
+
+function activeNavIfRequestMatches($requestUri)
+{
+    $current_file_name = basename($_SERVER['REQUEST_URI'], ".php");
+
+    if ($current_file_name == $requestUri) echo('active');
+}
+
