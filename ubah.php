@@ -1,5 +1,18 @@
 <?php
   require 'functions.php';
+  
+  // ambil data di url
+  $id=$_GET["id"];
+  $query = mysqli_query($conn,"SELECT * FROM mahasiswa WHERE id=$id");
+  $ada = mysqli_num_rows($query);
+
+  if($ada<1){
+    header("Location: index.php?ada=-1");
+    exit;
+  }
+
+  // query data mahasiswa berdasarkan id
+  $mhs=query("SELECT * FROM mahasiswa WHERE id=$id")[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +29,7 @@
       crossorigin="anonymous"
     />
 
-    <title>Tambah Data Mahasiswa</title>
+    <title>Ubah Data Mahasiswa</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -57,32 +70,33 @@
           <h4><?= date("l, d/m/Y")?></h4>
         </div>
       </div>
-      <h1 class="my-5 text-center">Tambah Data Mahasiswa</h1>
+      <h1 class="my-5 text-center">Ubah Data Mahasiswa</h1>
       <div class="row justify-content-center">
         <div class="col-auto">
           <form action="" method="post" class="row g-3" style="max-width:50rem;">
+            <input type="hidden" name="id" value="<?= $mhs["id"];?>">
             <div class="col-12">
               <label for="inputEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail" name="email" placeholder="email@example.com" required >
+              <input value="<?= $mhs["email"];?>" type="email" class="form-control" id="inputEmail" name="email" placeholder="email@example.com" required >
             </div>
             <div class="col-12">
               <label for="inputNama" class="form-label">Nama</label>
-              <input type="text" class="form-control" id="inputNama" name="nama" placeholder="Budi Setyawan" required>
+              <input value="<?= $mhs["nama"];?>" type="text" class="form-control" id="inputNama" name="nama" placeholder="Budi Setyawan" required>
             </div>
             <div class="col-md-6">
               <label for="inputNRP" class="form-label">NRP</label>
-              <input type="text" class="form-control" id="inputNRP" name="nrp" placeholder="ex: 05111940000001" required>
+              <input value="<?= $mhs["nrp"];?>" type="text" class="form-control" id="inputNRP" name="nrp" placeholder="ex: 05111940000001" required>
             </div>
             <div class="col-md-6">
               <label for="inputJurusan" class="form-label">Jurusan</label>
               <select id="inputJurusan" class="form-select" name="jurusan" required>
-                <option value="Teknik Informatika" selected>Teknik Informatika</option>
-                <option value="Sistem Informasi">Sistem Informasi</option>
-                <option value="Teknologi Informasi">Teknologi Informasi</option>
+                <option value="Teknik Informatika" <?php if($mhs["jurusan"] == "Teknik Informatika") echo("selected");?>>Teknik Informatika</option>
+                <option value="Sistem Informasi" <?php if($mhs["jurusan"] == "Sistem Informasi") echo("selected");?>>Sistem Informasi</option>
+                <option value="Teknologi Informasi" <?php if($mhs["jurusan"] == "Teknologi Informasi") echo("selected");?>>Teknologi Informasi</option>
               </select>
             </div>
             <div class="col-12 d-grid">
-              <button type="submit" class="btn btn-warning" name="submit" id="tambah">Tambah Data</button>
+              <button type="submit" class="btn btn-warning" name="submit" id="tambah">Ubah Data</button>
             </div>
           </form>
         </div>
@@ -97,12 +111,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Data berikut</p>
+            <p>Berikut hasil dari perubahan yang dilakukan</p>
             <p>Email: <?= $_POST['email'];?></p>
             <p>Nama: <?= $_POST['nama'];?></p>
             <p>NRP: <?= $_POST['nrp'];?></p>
             <p>Jurusan: <?= $_POST['jurusan'];?></p>
-            <p>Berhasil ditambahkan</p>
+            <p>Berhasil diubah</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -119,9 +133,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <?php
-              if(isset($_POST["submit"])&&nrpExist($_POST['nrp']) > 0) echo('<p class="badge bg-danger">NRP sudah ada dalam database</p>');
-            ?>
             <p>Data gagal ditambahkan. Hubungi admin untuk info lebih lanjut</p>
           </div>
           <div class="modal-footer">
@@ -149,10 +160,9 @@
   </body>
 </html>
 <?php
-
   // cek apakah tombol submit sudah ditekan atau belum
   if (isset($_POST["submit"])) {
-    if(tambah($_POST)>0){
+    if(ubah($_POST)>0){
       echo "
         <script>
           var myModal = new bootstrap.Modal(document.getElementById('modal-success'), {

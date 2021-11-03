@@ -47,3 +47,25 @@ function tambah($data) {
 	mysqli_query($conn,$query);
 	return mysqli_affected_rows($conn);
 }
+
+function ubah($data){
+	global $conn;
+	// ambil data dari setiap elemen pada form
+	$id = $data["id"];
+	$nrp = htmlspecialchars($data["nrp"]);
+	$nama = htmlspecialchars($data["nama"]);
+	$email = htmlspecialchars($data["email"]);
+	$jurusan = htmlspecialchars($data["jurusan"]);
+
+	// query insert data
+	$query = "UPDATE mahasiswa SET
+				nama = '$nama',
+				nrp = '$nrp',
+				email = '$email',
+				jurusan = '$jurusan'
+				WHERE id=$id
+				";
+
+	mysqli_query($conn,$query);
+	return mysqli_affected_rows($conn);
+}
