@@ -66,7 +66,7 @@
       <h1 class="my-5 text-center">Daftar Mahasiswa</h1>
       <div class="row justify-content-between mb-3">
         <div class="col-md-3 col-sm-4 mb-3 mb-sm-0">
-          <button class="btn btn-success">Tambah Data</button>
+          <a href="tambah.php" class="btn btn-success">Tambah Data</a>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-6">
           <form action="" method="post">

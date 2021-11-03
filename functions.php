@@ -25,3 +25,25 @@ function cari($keyword){
 			";
 		return query($query);
 }
+
+// check NRP
+function nrpExist($nrp){
+	$query = "SELECT nrp FROM mahasiswa WHERE nrp = '$nrp'";
+	return strlen(query($query)[0]['nrp']);
+}
+
+// function tambah
+function tambah($data) {
+	global $conn;
+	// ambil data dari setiap elemen pada form
+	$nrp = htmlspecialchars($data["nrp"]);
+	$nama = htmlspecialchars($data["nama"]);
+	$email = htmlspecialchars($data["email"]);
+	$jurusan = htmlspecialchars($data["jurusan"]);
+
+	// query insert data
+	$query = "INSERT INTO mahasiswa VALUES ('','$nrp','$nama','$email','$jurusan')";
+
+	mysqli_query($conn,$query);
+	return mysqli_affected_rows($conn);
+}
