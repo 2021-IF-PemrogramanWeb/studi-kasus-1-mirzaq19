@@ -69,3 +69,10 @@ function ubah($data){
 	mysqli_query($conn,$query);
 	return mysqli_affected_rows($conn);
 }
+
+function hapus($id){
+	global $conn;
+	$hd="DELETE FROM mahasiswa WHERE id = $id";
+	mysqli_query($conn, $hd);
+	return mysqli_affected_rows($conn);
+}

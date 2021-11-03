@@ -100,13 +100,34 @@
               <td><?= $row["jurusan"];?></td>
               <td class="text-center">
                 <a class="btn btn-warning" href="ubah.php?id=<?= $row["id"];?>">ubah</a>
-                <a class="btn btn-danger" href="hapus.php?id=<?= $row["id"];?>" onclick="return confirm('Apakah anda yakin ???')">hapus</a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-confirm" onclick="modalSet(<?= $row['id']?>)">hapus</button>
               </td>
             </tr>
             <?php $i++; ?>
             <?php endforeach; ?>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-confirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalConfirmLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalConfirmLabel">Hapus</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah anda yakin menghapus data berikut?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <form id="form-confirm" action="" method="post">
+              <button class="btn btn-danger" type="submit">Hapus</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -118,6 +139,13 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+    
+    <script>
+      const FORM_CONFIRM = document.getElementById('form-confirm');
+      const modalSet = (id) => {
+        FORM_CONFIRM.setAttribute('action',`hapus.php?id=${id}`)
+      }
+    </script>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
