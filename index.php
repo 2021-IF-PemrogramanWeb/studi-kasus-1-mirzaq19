@@ -1,14 +1,35 @@
 <?php
   require 'functions.php';
-  $mahasiswa = query("SELECT * FROM mahasiswa");
+  session_start();
 
   if(isset($_GET["ada"])){
     echo "<script>alert('Id yang diminta tidak ditemukan')</script>";
   }
 
   if (isset($_POST["cari"])) {
-    $mahasiswa = cari($_POST["keyword"]);
+    $keyword = $_POST["keyword"];
+    $_SESSION["keyword"] = $keyword;
+  }else{
+    $keyword = $_SESSION["keyword"];
   }
+
+  $mahasiswa = query("SELECT * FROM mahasiswa WHERE nama LIKE '%$keyword%' OR nrp LIKE '%$keyword%' OR email LIKE '%$keyword%' OR jurusan LIKE '%$keyword%'");
+
+  // pagination
+  // konfigurasi
+  $jumlahDataPerHalaman=5;
+  $jumlahData = count($mahasiswa);
+  $jumlahHalaman = ceil($jumlahData/$jumlahDataPerHalaman);
+  if (isset($_POST["cari"])){
+    $halamanAktif = 1;
+  }else{
+    $halamanAktif = (isset($_GET["halaman"])) ? $_GET["halaman"] : 1;
+  }
+  $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
+
+  $data_perhalaman = query("SELECT * FROM mahasiswa WHERE nama LIKE '%$keyword%' OR nrp LIKE '%$keyword%' OR email LIKE '%$keyword%' OR jurusan LIKE '%$keyword%' LIMIT $awalData, $jumlahDataPerHalaman");
+  
+
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +76,7 @@
         <div class="col-lg-4 col-md-6 col-sm-6">
           <form action="" method="post">
             <div class="input-group">
-              <input type="text" class="form-control" name="keyword" placeholder="Masukkan keyword pencarian" size="30" autofocus autocomplete="off">
+              <input value="<?= $keyword?>" type="text" class="form-control" name="keyword" placeholder="Masukkan keyword pencarian" size="30" autofocus autocomplete="off">
               <button class="btn btn-outline-success" type="submit" name="cari" >Cari</button>
             </div>
           </form>
@@ -74,8 +95,8 @@
             </tr>
           </thead>
           <tbody>
-            <?php $i=1 ?>
-            <?php foreach($mahasiswa as $row): ?>
+            <?php $i=$awalData+1 ?>
+            <?php foreach($data_perhalaman as $row): ?>
             <tr>
               <td><?= $i;?></td>
               <td><?= $row["nrp"];?></td>
@@ -92,6 +113,21 @@
           </tbody>
         </table>
       </div>
+      <nav class="mt-4" aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item <?php if($halamanAktif<=1) echo("disabled")?>"><a class="page-link" href="?halaman=<?= $halamanAktif-1?>">Previous</a></li>
+          <?php for($i=($halamanAktif-2 == 0)?1:$halamanAktif-2; $i <= $halamanAktif-1 && $i >= 1 ; $i++): ?>
+            <li class="page-item"><a class="page-link" href="?halaman=<?= $i?>"><?= $i?></a></li>
+          <?php endfor;?>
+          <li class="page-item active" aria-current="page"><span class="page-link"><?= $halamanAktif?></span></li>
+          <?php for($i=$halamanAktif+1; $i <= $halamanAktif+2 && $i <= $jumlahHalaman; $i++): ?>
+            <li class="page-item"><a class="page-link" href="?halaman=<?= $i?>"><?= $i?></a></li>
+          <?php endfor;?>
+          <li class="page-item <?php if($halamanAktif>=$jumlahHalaman) echo("disabled")?>"><a class="page-link" href="?halaman=<?= $halamanAktif+1?>">Next</a></li>
+          <!-- <li class="page-item"><a class="page-link" href="#">3</a></li> -->
+          <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
+        </ul>
+      </nav>
     </div>
 
     <!-- Modal -->
