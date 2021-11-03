@@ -2,6 +2,10 @@
   require 'functions.php';
   $mahasiswa = query("SELECT * FROM mahasiswa");
 
+  if(isset($_GET["ada"])){
+    echo "<script>alert('Id yang diminta tidak ditemukan')</script>";
+  }
+
   if (isset($_POST["cari"])) {
     $mahasiswa = cari($_POST["keyword"]);
   }
