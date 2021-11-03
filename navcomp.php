@@ -5,7 +5,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="./index.php">Beranda</a>
         </li>
@@ -13,6 +13,7 @@
           <a class="nav-link" href="./grafik.php">Grafik</a>
         </li>
       </ul>
+      <a class="btn btn-light" href="logout.php">Logout</a>
     </div>
   </div>
 </nav>

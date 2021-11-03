@@ -1,3 +1,21 @@
+<?php 
+require 'functions.php';
+
+if(isset($_POST["register"])){
+
+	if(registrasi($_POST)>0){
+		echo "<script>
+				alert('User baru berhasil ditambahkan');
+			</script>";
+	}else{
+		echo "<script>
+				alert('Registrasi user gagal');
+			</script>";
+		echo mysqli_error($conn);
+	}
+}
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -39,7 +57,7 @@
           <h1 class="mb-3 text-center">Register</h1>
           <p class="text-center"><small>Silahkan buat akun untuk login</small></p>
           <hr>
-          <form action="./login_action.php" method="post">
+          <form action="" method="post">
             <div class="mb-3">
               <label for="inputName" class="form-label">Nama</label>
               <input
@@ -77,20 +95,20 @@
             </div>
             <div class="mb-3">
               <label for="inputRepeatPassword" class="form-label"
-                >Repeat Password</label
+                >Konfirmasi Password</label
               >
               <input
                 type="password"
                 class="form-control"
                 id="inputRepeatPassword"
                 name="repeatpassword"
-                placeholder="repeat password"
+                placeholder="ulangi password"
                 required
               />
             </div>
             <p><small>Sudah punya akun? <a href="login.php" class="text-decoration-none">Login</a></small></p>
             <div class="mt-4 d-grid">
-              <button type="submit" class="btn btn-block btn-dark">
+              <button type="submit" name="register" class="btn btn-block btn-dark">
                 Register
               </button>
             </div>

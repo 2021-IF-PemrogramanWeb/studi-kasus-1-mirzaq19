@@ -76,3 +76,34 @@ function hapus($id){
 	mysqli_query($conn, $hd);
 	return mysqli_affected_rows($conn);
 }
+
+function registrasi($data){
+	global $conn;
+
+	$email = strtolower(stripslashes($data["email"]));
+	$nama = $data["nama"];
+	$password = mysqli_real_escape_string($conn, $data["password"]);
+	$repeatpassword = mysqli_real_escape_string($conn, $data["repeatpassword"]);
+
+	// cek usename sudah ada atau belum
+	$result = mysqli_query($conn, "SELECT email FROM users WHERE email = '$email'");
+	if(mysqli_fetch_assoc($result)){
+		echo "<script>alert('Email telah terdaftar')</script>";
+		return false;
+	}
+
+	// cek konfirmasi password
+	if($password !== $repeatpassword){
+		echo "<script>alert('Konfirmasi password tidak sesuai');</script>";
+		return false;
+	}
+
+	// enkripsi password
+	$password = password_hash($password, PASSWORD_DEFAULT);
+
+	// tambahkan user baru ke database
+	$query= "INSERT INTO users VALUES ('','$nama','$email','$password')";
+	mysqli_query($conn, $query);
+
+	return mysqli_affected_rows($conn);
+}

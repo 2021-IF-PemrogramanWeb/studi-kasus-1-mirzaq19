@@ -1,3 +1,53 @@
+<?php 
+  require 'functions.php';
+  session_start();
+
+  if (isset($_COOKIE['id'])&&isset($_COOKIE['key'])) {
+    $id = $_COOKIE['id'];
+    $key = $_COOKIE['key'];
+
+    // ambil usename berdasarkan id
+    $result = mysqli_query($conn, "SELECT email FROM users WHERE id = $id");
+    $row = mysqli_fetch_assoc($result);
+
+    // cek cookie dan email
+    if($key === hash('sha256', $row['email'])){
+      $_SESSION['login'] =true;
+    }
+  }
+
+  if (isset($_SESSION["login"])) {
+    header("Location: index.php");
+    exit;
+  }
+
+  if (isset($_POST["login"])) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
+
+    // cek email
+    if (mysqli_num_rows($result)===1) {
+      // cek password
+      $row = mysqli_fetch_assoc($result);
+      if(password_verify($password, $row["password"])){
+        // set session
+        $_SESSION["login"] = true;
+
+        // cek remember me
+        if(isset($_POST['remember'])){
+          // buat cookie
+          setcookie('id',$row['id'],time()+60);
+          setcookie('key', hash('sha256', $row['email']), time()+60);
+        }
+        header("Location: index.php");
+        exit;
+      }
+    }
+    $error = true;
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,7 +88,10 @@
           <h1 class="mb-3 text-center">Login</h1>
           <p class="text-center"><small>Silahkan login terlebih dahulu</small></p>
           <hr>
-          <form action="./login_action.php" method="post">
+          <?php if(isset($error)): ?>
+            <p class="text-center text-danger">email/password salah</p>
+          <?php endif; ?>
+          <form action="" method="post">
             <div class="mb-3">
               <label for="inputEmail" class="form-label">Email</label>
               <input
@@ -64,8 +117,9 @@
               />
             </div>
             <p><small>Tidak punya akun? <a href="register.php" class="text-decoration-none">Daftar</a></small></p>
+            
             <div class="mt-4 d-grid">
-              <button type="submit" class="btn btn-block btn-dark">
+              <button type="submit" name="login" class="btn btn-block btn-dark">
                 Login
               </button>
             </div>

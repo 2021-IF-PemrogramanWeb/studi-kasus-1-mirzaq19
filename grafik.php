@@ -1,4 +1,10 @@
 <?php
+	// cek session
+	session_start();
+	if(!isset($_SESSION["login"])){
+		header("Location: login.php");
+		exit;
+	}
   require 'functions.php';
 
   $jumlah_mahasiswa = (query("SELECT jurusan,COUNT(id) AS jumlah FROM `mahasiswa` GROUP BY jurusan"));

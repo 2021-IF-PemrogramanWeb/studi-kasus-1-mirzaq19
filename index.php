@@ -1,6 +1,11 @@
 <?php
-  require 'functions.php';
+  // cek session
   session_start();
+  if(!isset($_SESSION["login"])){
+    header("Location: login.php");
+    exit;
+  }
+  require 'functions.php';
 
   if(isset($_GET["ada"])){
     echo "<script>alert('Id yang diminta tidak ditemukan')</script>";
@@ -10,6 +15,7 @@
     $keyword = $_POST["keyword"];
     $_SESSION["keyword"] = $keyword;
   }else{
+    if(!isset($_SESSION["keyword"])) $_SESSION["keyword"] = ''; 
     $keyword = $_SESSION["keyword"];
   }
 
