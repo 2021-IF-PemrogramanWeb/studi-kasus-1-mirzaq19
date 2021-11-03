@@ -61,11 +61,11 @@
             </div>
             <div class="col-12">
               <label for="inputNama" class="form-label">Nama</label>
-              <input value="<?= $mhs["nama"];?>" type="text" class="form-control" id="inputNama" name="nama" placeholder="Budi Setyawan" required>
+              <input value="<?= $mhs["nama"];?>" type="text" minlength="4" class="form-control" id="inputNama" name="nama" placeholder="Budi Setyawan" required>
             </div>
             <div class="col-md-6">
               <label for="inputNRP" class="form-label">NRP</label>
-              <input value="<?= $mhs["nrp"];?>" type="text" class="form-control" id="inputNRP" name="nrp" placeholder="ex: 05111940000001" required>
+              <input value="<?= $mhs["nrp"];?>" type="text" size="14" minlength="14" maxlength="14" class="form-control" id="inputNRP" name="nrp" placeholder="ex: 05111940000001" required>
             </div>
             <div class="col-md-6">
               <label for="inputJurusan" class="form-label">Jurusan</label>
