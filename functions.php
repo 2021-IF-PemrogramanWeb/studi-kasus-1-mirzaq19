@@ -11,5 +11,17 @@ function query($query){
 		$rows[]= $row;
 	}
 	return $rows;
+}
 
+
+// Cari data
+function cari($keyword){
+	$query = "SELECT * FROM mahasiswa
+				WHERE
+			nama LIKE '%$keyword%' OR
+			nrp LIKE '%$keyword%' OR
+			email LIKE '%$keyword%' OR
+			jurusan LIKE '%$keyword%'
+			";
+		return query($query);
 }
