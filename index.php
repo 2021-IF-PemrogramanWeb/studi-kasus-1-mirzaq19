@@ -1,3 +1,8 @@
+<?php
+  require 'functions.php';
+  $mahasiswa = query("SELECT * FROM mahasiswa");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,63 +18,91 @@
       crossorigin="anonymous"
     />
 
-    <title>Hello, world!</title>
-    <style>
-      body {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        /* background: rgb(51,233,255);
-        background: linear-gradient(90deg, rgba(51,233,255,1) 0%, rgba(226,107,255,1) 100%); */
-        background: rgb(71,255,110);
-        background: linear-gradient(45deg, rgba(71,255,110,1) 0%, rgba(8,143,255,1) 100%);
-      }
-      .login-wrapper{
-        width: 100%;
-        max-width: 330px;
-        padding: 1.6rem;
-        border-radius: .8rem;
-      }
-
-    </style>
+    <title>Daftar Mahasiswa</title>
   </head>
   <body>
-    <div class="container">
-      <div class="d-flex justify-content-center">
-        <div class="login-wrapper bg-light">
-          <h1 class="mb-3 text-center">Login</h1>
-          <p class="text-center"><small>Silahkan login terlebih dahulu</small></p>
-          <hr>
-          <form action="./login_action.php" method="post">
-            <div class="mb-3">
-              <label for="inputEmail" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="inputEmail"
-                name="email"
-                placeholder="example@gmail.com"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="inputPassword" class="form-label"
-                >Password</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                id="inputPassword"
-                name="password"
-                placeholder="password"
-              />
-            </div>
-            <div class="mt-4 d-grid">
-              <button type="submit" class="btn btn-block btn-dark">
-                Login
-              </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+      <div class="container">
+        <a class="navbar-brand" href="#">Pemrograman Web</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./grafik.php">Grafik</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./viewDB.php">View DB</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./tabel.php">Tabel</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-6">
+          <img src="./img/logoits.png" alt="logo ITS" height="100" />
+        </div>
+        <div
+          class="
+            col-6
+            d-flex
+            align-content-center
+            flex-wrap
+            justify-content-end
+          "
+        >
+          <h4><?= date("l, d/m/Y")?></h4>
+        </div>
+      </div>
+      <h1 class="my-5 text-center">Daftar Mahasiswa</h1>
+      <div class="row justify-content-between mb-3">
+        <div class="col-md-3 col-sm-4 mb-3 mb-sm-0">
+          <button class="btn btn-success">Tambah Data</button>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <form action="" method="post">
+            <div class="input-group">
+              <input type="text" class="form-control" name="keyword" placeholder="Masukkan keyword pencarian" size="30" autofocus autocomplete="off">
+              <button class="btn btn-outline-success" type="submit" name="cari" >Cari</button>
             </div>
           </form>
         </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr class="table-success text-center">
+              <th scope="col">No.</th>
+              <th scope="col">NRP</th>
+              <th scope="col">Nama</th>
+              <th scope="col">Email</th>
+              <th scope="col">Jurusan</th>
+              <th scope="col">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $i=1 ?>
+            <?php foreach($mahasiswa as $row): ?>
+            <tr>
+              <td><?= $i;?></td>
+              <td><?= $row["nrp"];?></td>
+              <td><?= $row["nama"];?></td>
+              <td><?= $row["email"];?></td>
+              <td><?= $row["jurusan"];?></td>
+              <td class="text-center">
+                <a class="btn btn-warning" href="ubah.php?id=<?= $row["id"];?>">ubah</a>
+                <a class="btn btn-danger" href="hapus.php?id=<?= $row["id"];?>" onclick="return confirm('Apakah anda yakin ???')">hapus</a>
+              </td>
+            </tr>
+            <?php $i++; ?>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     </div>
 
