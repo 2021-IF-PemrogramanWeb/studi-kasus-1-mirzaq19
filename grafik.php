@@ -1,3 +1,8 @@
+<?php
+  require 'functions.php';
+
+  $jumlah_mahasiswa = (query("SELECT jurusan,COUNT(id) AS jumlah FROM `mahasiswa` GROUP BY jurusan"));
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -34,6 +39,7 @@
         <h4><?= date("l, d/m/Y")?></h4>
         </div>
       </div>
+      <h2 class="text-center mt-5">Grafik Jumlah Mahasiswa per Jurusan</h2>
       <div class="mt-5">
         <canvas id="myChart"></canvas>
       </div>
@@ -42,15 +48,18 @@
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+      const SI = <?= $jumlah_mahasiswa[0]['jumlah']?>;
+      const TIF = <?= $jumlah_mahasiswa[1]['jumlah']?>;
+      const TI = <?= $jumlah_mahasiswa[2]['jumlah']?>;
+      const labels = ["Teknik Informatika", "Sistem Informasi", "Teknologi Informasi"];
       const data = {
         labels: labels,
         datasets: [
           {
-            label: "Trend of Reason",
+            label: "Jumlah Mahasiswa",
             backgroundColor: "rgb(43, 143, 237)",
             borderColor: "rgb(255, 99, 132)",
-            data: [2, 3, 4, 1, 2, 5, 6, 7, 1, 1, 1, 2, 3, 2, 1, 9],
+            data: [TIF, SI, TI],
           },
         ],
       };
