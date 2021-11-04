@@ -13,7 +13,10 @@
           <a class="nav-link <?php activeNavIfRequestMatches("grafik")?>" href="./grafik.php">Grafik</a>
         </li>
       </ul>
-      <a class="btn btn-outline-light" href="logout.php">Logout</a>
+      <div class="row">
+        <p class="col-12 col-md-auto text-white my-2"><?= $_SESSION["email"]?></p>
+        <a class="col-4 col-md-auto btn btn-outline-light mx-2 mx-md-0" href="logout.php">Logout</a>
+      </div>
     </div>
   </div>
 </nav>

@@ -34,12 +34,13 @@
       if(password_verify($password, $row["password"])){
         // set session
         $_SESSION["login"] = true;
+        $_SESSION["email"] = $row["email"];
 
         // cek remember me
         if(isset($_POST['remember'])){
           // buat cookie
-          setcookie('id',$row['id'],time()+60);
-          setcookie('key', hash('sha256', $row['email']), time()+60);
+          setcookie('id',$row['id'],time()+3600);
+          setcookie('key', hash('sha256', $row['email']), time()+3600);
         }
         header("Location: index.php");
         exit;
@@ -117,6 +118,12 @@
               />
             </div>
             <p><small>Tidak punya akun? <a href="register.php" class="text-decoration-none">Daftar</a></small></p>
+            <div class="form-check">
+              <input class="form-check-input" name="remember" type="checkbox" value="" id="rememberCheckBox">
+              <label class="form-check-label" for="rememberCheckBox">
+                Ingat saya
+              </label>
+            </div>
             
             <div class="mt-4 d-grid">
               <button type="submit" name="login" class="btn btn-block btn-dark">
@@ -135,7 +142,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
-    ></script>
+    ></>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
