@@ -90,7 +90,9 @@
           <p class="text-center"><small>Silahkan login terlebih dahulu</small></p>
           <hr>
           <?php if(isset($error)): ?>
-            <p class="text-center text-danger">email/password salah</p>
+            <div class="alert alert-danger" role="alert">
+              Email / password tidak cocok
+            </div>
           <?php endif; ?>
           <form action="" method="post">
             <div class="mb-3">
