@@ -1,18 +1,18 @@
 <?php 
 require 'functions.php';
 
-if(isset($_POST["register"])){
+if (isset($_SESSION["login"])) {
+  header("Location: index.php");
+  exit;
+}
 
-	if(registrasi($_POST)>0){
-		echo "<script>
-				alert('User baru berhasil ditambahkan');
-			</script>";
-	}else{
-		echo "<script>
-				alert('Registrasi user gagal');
-			</script>";
-		echo mysqli_error($conn);
-	}
+if(isset($_POST["register"])){
+  $response = registrasi($_POST);
+  // if($response["status"]){
+  //   echo "<script>alert('User baru berhasil ditambahkan');</script>";
+  // } else{
+  //   echo "<script>alert('Registrasi user gagal, silahkan hubungi admin untuk info lebih lanjut.');</script>";
+  // }
 }
 
  ?>
@@ -42,7 +42,7 @@ if(isset($_POST["register"])){
       }
       .login-wrapper{
         width: 100%;
-        max-width: 430px;
+        max-width: 35rem;
         padding: 1.6rem;
         border-radius: .8rem;
         margin: 1rem 0;
@@ -56,29 +56,60 @@ if(isset($_POST["register"])){
         <div class="login-wrapper bg-light">
           <h1 class="mb-3 text-center">Register</h1>
           <p class="text-center"><small>Silahkan buat akun untuk login</small></p>
+          <?php if(isset($response) && $response["status"]): ?>
+            <div class="alert alert-success" role="alert">
+              User baru berhasil ditambahkan. Silahkan <a href="login.php">login</a> .
+            </div>
+          <?php endif;?>
+          <?php if(isset($response) && !$response["status"]): ?>
+            <div class="alert alert-danger" role="alert">
+              Registrasi user gagal, silahkan periksa kembali isian formulir atau hubungi admin untuk info lebih lanjut.
+            </div>
+          <?php endif;?>
           <hr>
           <form action="" method="post">
             <div class="mb-3">
               <label for="inputName" class="form-label">Nama</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control <?= isset($response["errors"]["nama"]) ? 'is-invalid':'' ?>"
                 id="inputName"
                 name="nama"
                 placeholder="Budi Hermanto"
+                minLength="3"
+                maxLength="50"
+                value="<?= isset($_POST["nama"]) && !$response["status"] ? xss($_POST["nama"]) : '' ?>"
                 required
               />
+              <?php if(isset($response["errors"]["nama"])): ?>
+                <div id="validationServerNameFeedback" class="invalid-feedback">
+                  <?= $response["errors"]["nama"]?>
+                </div>
+              <?php endif; ?>
+              <div class="form-text">
+                nama setidaknya berisi 3 karakter. Tidak boleh berisi angka atau karakter khusus.
+              </div>
             </div>
             <div class="mb-3">
               <label for="inputEmail" class="form-label">Email</label>
               <input
                 type="email"
-                class="form-control"
+                class="form-control <?= isset($response["errors"]["email"]) ? 'is-invalid':'' ?>"
                 id="inputEmail"
                 name="email"
                 placeholder="example@gmail.com"
+                maxLength="50"
+                value="<?= isset($_POST["email"]) && !$response["status"] ? xss($_POST["email"]) : '' ?>"
                 required
               />
+              <?php if(isset($response["errors"]["email"])): ?>
+                <div id="validationServerEmailFeedback" class="invalid-feedback">
+                  <?= $response["errors"]["email"]?>
+                </div>
+              <?php endif; ?>
+              <div class="form-text">
+                Isi email sesuai format. Contoh: example@mail.com
+              </div>
             </div>
             <div class="mb-3">
               <label for="inputPassword" class="form-label"
@@ -86,12 +117,17 @@ if(isset($_POST["register"])){
               >
               <input
                 type="password"
-                class="form-control"
+                class="form-control <?= isset($response["errors"]["password"]) ? 'is-invalid':'' ?>"
                 id="inputPassword"
                 name="password"
                 placeholder="password"
                 required
               />
+              <?php if(isset($response["errors"]["password"])): ?>
+                <div id="validationServerPasswordFeedback" class="invalid-feedback">
+                  <?= $response["errors"]["password"]?>
+                </div>
+              <?php endif; ?>
             </div>
             <div class="mb-3">
               <label for="inputRepeatPassword" class="form-label"

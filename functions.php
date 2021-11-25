@@ -77,25 +77,86 @@ function hapus($id){
 	return mysqli_affected_rows($conn);
 }
 
+// //Prevent XSS attacks
+function xss($data)
+{
+	$data = trim($data);
+    $data = strtolower($data);
+	$data = stripslashes($data);
+	$data = htmlspecialchars($data);
+	return $data;
+}
+
+function checkLength($data, $min, $max){
+	$length = strlen($data);
+	if($length < $min || $length > $max){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function checkChar($data){
+	if(!preg_match('/^[a-zA-Z.\' ]+$/', $data)){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function validateName($data){
+	if(checkChar($data) && checkLength($data, 3, 50)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function validateEmail($email)
+{
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+    return true;
+}
+
 function registrasi($data){
 	global $conn;
 
-	$email = strtolower(stripslashes($data["email"]));
+	$email = mysqli_real_escape_string($conn, xss($data["email"]));
 	$nama = $data["nama"];
 	$password = mysqli_real_escape_string($conn, $data["password"]);
 	$repeatpassword = mysqli_real_escape_string($conn, $data["repeatpassword"]);
+	
+	$response = array(
+		"status" => true,
+		"errors" => array(),
+	);
 
-	// cek usename sudah ada atau belum
+	// cek nama
+	if(!validateName($nama)){
+		$response["errors"]["nama"] = "Pastikan nama tidak mengandung karakter khusus, angka, dan setidaknya berisi 3 karakter";
+	}
+
+	// cek email
+	if(!validateEmail($email)){
+		$response["errors"]["email"] = "Pastikan format email valid";
+	}
+
+	// cek email sudah ada atau belum
 	$result = mysqli_query($conn, "SELECT email FROM users WHERE email = '$email'");
 	if(mysqli_fetch_assoc($result)){
-		echo "<script>alert('Email telah terdaftar')</script>";
-		return false;
+		$response["errors"]["email"] = "Email telah terdaftar";
 	}
 
 	// cek konfirmasi password
 	if($password !== $repeatpassword){
-		echo "<script>alert('Konfirmasi password tidak sesuai');</script>";
-		return false;
+		$response["errors"]["password"] = "Konfirmasi Password tidak sesuai";
+	}
+
+	if(count($response["errors"])){
+		$response["status"] = false;
+		return $response;
 	}
 
 	// enkripsi password
@@ -105,13 +166,13 @@ function registrasi($data){
 	$query= "INSERT INTO users VALUES ('','$nama','$email','$password')";
 	mysqli_query($conn, $query);
 
-	return mysqli_affected_rows($conn);
+	(mysqli_affected_rows($conn) > 0) ? $response["status"] = true : $response["status"] = false;
+
+	return $response;
 }
 
-function activeNavIfRequestMatches($requestUri)
-{
+function activeNavIfRequestMatches($requestUri){
     $current_file_name = basename($_SERVER['REQUEST_URI'], ".php");
-
     if ($current_file_name == $requestUri) echo('active');
 }
 
