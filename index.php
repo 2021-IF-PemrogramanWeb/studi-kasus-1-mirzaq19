@@ -12,11 +12,11 @@
   }
 
   if (isset($_POST["cari"])) {
-    $keyword = $_POST["keyword"];
+    $keyword = mysqli_real_escape_string($conn,xss($_POST["keyword"]));
     $_SESSION["keyword"] = $keyword;
   }else{
     if(!isset($_SESSION["keyword"])) $_SESSION["keyword"] = ''; 
-    $keyword = $_SESSION["keyword"];
+    $keyword = mysqli_real_escape_string($conn,xss($_SESSION["keyword"]));
   }
 
   $mahasiswa = query("SELECT * FROM mahasiswa WHERE nama LIKE '%$keyword%' OR nrp LIKE '%$keyword%' OR email LIKE '%$keyword%' OR jurusan LIKE '%$keyword%'");
