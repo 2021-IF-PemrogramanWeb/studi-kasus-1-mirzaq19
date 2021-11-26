@@ -3,17 +3,7 @@
   session_start();
 
   if (isset($_COOKIE['id'])&&isset($_COOKIE['key'])) {
-    $id = $_COOKIE['id'];
-    $key = $_COOKIE['key'];
-
-    // ambil usename berdasarkan id
-    $result = mysqli_query($conn, "SELECT email FROM users WHERE id = $id");
-    $row = mysqli_fetch_assoc($result);
-
-    // cek cookie dan email
-    if($key === hash('sha256', $row['email'])){
-      $_SESSION['login'] =true;
-    }
+    loginUsingCookie();
   }
 
   if (isset($_SESSION["login"])) {
@@ -22,29 +12,10 @@
   }
 
   if (isset($_POST["login"])) {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-
-    $result = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
-
-    // cek email
-    if (mysqli_num_rows($result)===1) {
-      // cek password
-      $row = mysqli_fetch_assoc($result);
-      if(password_verify($password, $row["password"])){
-        // set session
-        $_SESSION["login"] = true;
-        $_SESSION["email"] = $row["email"];
-
-        // cek remember me
-        if(isset($_POST['remember'])){
-          // buat cookie
-          setcookie('id',$row['id'],time()+3600);
-          setcookie('key', hash('sha256', $row['email']), time()+3600);
-        }
-        header("Location: index.php");
-        exit;
-      }
+    $response = login($_POST);
+    if ($response["status"]) {
+      header("Location: index.php");
+      exit;
     }
     $error = true;
   }

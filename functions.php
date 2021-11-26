@@ -171,6 +171,52 @@ function registrasi($data){
 	return $response;
 }
 
+function loginUsingCookie() {
+	$id = $_COOKIE['id'];
+    $key = $_COOKIE['key'];
+
+    // ambil usename berdasarkan id
+    $result = mysqli_query($conn, "SELECT email FROM users WHERE id = $id");
+    $row = mysqli_fetch_assoc($result);
+
+    // cek cookie dan email
+    if($key === hash('sha256', $row['email'])){
+      $_SESSION['login'] =true;
+    }
+}
+
+function login($data){
+	global $conn;
+
+	$email = mysqli_real_escape_string($conn, xss($data["email"]));
+	$password = mysqli_real_escape_string($conn, $data["password"]);
+
+	$response = array(
+		"status" => true,
+	);
+
+	// cek email sudah ada atau belum
+	$result = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
+	if($row = mysqli_fetch_assoc($result)){
+		// cek password
+		if(password_verify($password, $row["password"])){
+			// set session
+			$_SESSION["login"] = true;
+			$_SESSION["email"] = $row["email"];
+	
+			// cek remember me
+			if(isset($_POST['remember'])){
+			  // buat cookie
+			  setcookie('id',$row['id'],time()+3600);
+			  setcookie('key', hash('sha256', $row['email']), time()+3600);
+			}
+			return $response;
+		}
+	}
+	$response["status"] = false;
+	return $response;
+}
+
 function activeNavIfRequestMatches($requestUri){
     $current_file_name = basename($_SERVER['REQUEST_URI'], ".php");
     if ($current_file_name == $requestUri) echo('active');
