@@ -1,6 +1,6 @@
 <?php 
 // koneksi ke database
-$conn=mysqli_connect("localhost","mirzaq","Lahir@191222000","pweb");
+$conn=mysqli_connect("localhost","mirzaq","Lahir@19122000","pweb");
 
 // Ambil data dari tabel mahasiswa
 function query($query){
