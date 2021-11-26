@@ -1,6 +1,6 @@
 <?php 
 // koneksi ke database
-$conn=mysqli_connect("localhost","root","","pweb");
+$conn=mysqli_connect("localhost","mirzaq","Lahir@191222000","pweb");
 
 // Ambil data dari tabel mahasiswa
 function query($query){
@@ -42,7 +42,7 @@ function tambah($data) {
 	$jurusan = htmlspecialchars($data["jurusan"]);
 
 	// query insert data
-	$query = "INSERT INTO mahasiswa VALUES ('','$nrp','$nama','$email','$jurusan')";
+	$query = "INSERT INTO mahasiswa VALUES (NULL,'$nrp','$nama','$email','$jurusan')";
 
 	mysqli_query($conn,$query);
 	return mysqli_affected_rows($conn);
@@ -163,7 +163,7 @@ function registrasi($data){
 	$password = password_hash($password, PASSWORD_DEFAULT);
 
 	// tambahkan user baru ke database
-	$query= "INSERT INTO users VALUES ('','$nama','$email','$password')";
+	$query= "INSERT INTO users VALUES (NULL,'$nama','$email','$password')";
 	mysqli_query($conn, $query);
 
 	(mysqli_affected_rows($conn) > 0) ? $response["status"] = true : $response["status"] = false;
